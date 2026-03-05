@@ -134,3 +134,18 @@ async def get_recipe_calories(
     recipe_repository: RecipeRepository = Depends(get_recipe_repository),
 ):
     return recipe_repository.get_calories_by_recipe_id(recipe_id)
+
+
+@router.get(
+    "/ingredient/{ingredient_id}/recipes",
+    response_model=list[GetIngredientRecipeSchema],
+    responses={
+        404: {"model": ErrorResponse, "description": "Ingredient not found"},
+        500: {"model": ErrorResponse, "description": "Internal server error"},
+    },
+)
+async def get_recipes_by_ingredient_id(
+    ingredient_id: int,
+    recipe_repository: RecipeRepository = Depends(get_recipe_repository),
+) -> list[GetIngredientRecipeSchema]:
+    return recipe_repository.get_recipes_with_ingredients_by_id(ingredient_id)
