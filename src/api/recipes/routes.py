@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from src.api.auth.services import get_current_user
 from src.api.recipes.schemas import (
     CreateRecipeSchema,
+    GetIngredientRecipeSchema,
     GetRecipeSchema,
     DeleteRecipeSchema,
     UpdateRecipeSchema,
@@ -118,3 +119,18 @@ async def delete_recipe(
     current_user_id=Depends(get_current_user),
 ) -> DeleteRecipeSchema:
     return recipe_repository.delete_recipe_by_id(recipe_id, current_user_id)
+
+
+@router.post(
+    "/{recipe_id}/calories",
+    response_model=int,
+    responses={
+        404: {"model": ErrorResponse, "description": "Recipe not found"},
+        500: {"model": ErrorResponse, "description": "Internal server error"},
+    },
+)
+async def get_recipe_calories(
+    recipe_id: int,
+    recipe_repository: RecipeRepository = Depends(get_recipe_repository),
+):
+    return recipe_repository.get_calories_by_recipe_id(recipe_id)
