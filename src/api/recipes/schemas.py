@@ -53,3 +53,23 @@ class UpdateRecipeSchema(RecipeBaseSchema):
 
 class DeleteRecipeSchema(GetRecipeSchema):
     pass
+
+
+class RecipeIngredientFactory(BaseSchema):
+    ingredient: str = Field(..., examples=["Broccoli"])
+    is_vegan: bool = Field(..., examples=[True])
+    quantity: str = Field(..., examples=["100 grams"])
+
+
+class GetIngredientRecipeSchema(BaseSchema):
+    name: str = Field(max_length=183, examples=["Tzatziki"])
+    cooking_time: int = Field(..., examples=[30], ge=1)
+    portions: int = Field(..., examples=[4], ge=1)
+    instructions: str = Field(..., examples=["Mix all ingredients."])
+    is_vegan: bool = Field(..., examples=[False])
+    ingredients: list[RecipeIngredientFactory] = Field(
+        default_factory=list,
+        alias="ingredients_factory",
+        serialization_alias="ingredients",
+        examples=[[{"ingredient": "Broccoli", "is_vegan": True, "quantity": "100 grams"}]],
+    )
