@@ -186,3 +186,14 @@ class RecipeRepository:
                 kind=ErrorKind.CONFLICT,
                 source=f"{self.repo_name},update_recipe",
             )
+
+    def get_calories_by_recipe_id(self, recipe_id: int) -> int:
+        self.get_recipe_by_id(recipe_id)
+        calories = (
+            self.db.query(Ingredient.calories, RecipeIngredient.quantity)
+            .join(RecipeIngredient, Ingredient.id == RecipeIngredient.ingredient_id)
+            .filter(RecipeIngredient.recipe_id == recipe_id)
+            .all()
+        )
+        total_calories = sum(calorie * quantity for calorie, quantity in calories)
+        return total_calories
