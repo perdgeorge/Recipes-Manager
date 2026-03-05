@@ -5,6 +5,7 @@ from src.db.models.recipes import Recipe, RecipeIngredient
 from src.db.models.ingredients import Ingredient
 from src.db.models.users import User
 from src.api.recipes.schemas import (
+    GetIngredientRecipeSchema,
     GetRecipeSchema,
     CreateRecipeSchema,
     DeleteRecipeSchema,
@@ -187,13 +188,17 @@ class RecipeRepository:
                 source=f"{self.repo_name},update_recipe",
             )
 
-    def get_calories_by_recipe_id(self, recipe_id: int) -> int:
-        self.get_recipe_by_id(recipe_id)
-        calories = (
-            self.db.query(Ingredient.calories, RecipeIngredient.quantity)
-            .join(RecipeIngredient, Ingredient.id == RecipeIngredient.ingredient_id)
-            .filter(RecipeIngredient.recipe_id == recipe_id)
+    def get_recipes_with_ingredients_by_id(
+        self, recipe_ingredient_id: int
+    ) -> list[GetIngredientRecipeSchema]:
+        recipes = (
+            self.db.query(Recipe)
+            .join(RecipeIngredient)
+            .filter(RecipeIngredient.ingredient_id == recipe_ingredient_id)
             .all()
         )
-        total_calories = sum(calorie * quantity for calorie, quantity in calories)
-        return total_calories
+        return [GetIngredientRecipeSchema.model_validate(recipe) for recipe in recipes]
+
+    def get_calories_by_recipe_id(self, recipe_id: int) -> int:
+        recipe = self.get_recipe_by_id(recipe_id)
+        return recipe
