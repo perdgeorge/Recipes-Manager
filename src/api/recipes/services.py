@@ -9,7 +9,7 @@ from src.api.recipes.schemas import (
     GetRecipeSchema,
     CreateRecipeSchema,
     DeleteRecipeSchema,
-    RecipeIngredientPayload,
+    RecipeIngredientFactory,
     UpdateRecipeSchema,
 )
 from src.core.exceptions import ErrorException
@@ -58,7 +58,7 @@ class RecipeRepository:
         return GetRecipeSchema.model_validate(recipe)
 
     def make_recipe_ingredients(
-        self, items: list[RecipeIngredientPayload]
+        self, items: list[RecipeIngredientFactory]
     ) -> list[RecipeIngredient]:
         if not items:
             return []
