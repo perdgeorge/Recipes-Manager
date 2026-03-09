@@ -16,6 +16,8 @@ class Config(BaseConfig):
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    OPENAI_API_KEY: str
+    OPENAI_MODEL: str
 
 
 def get_config(env_state):
