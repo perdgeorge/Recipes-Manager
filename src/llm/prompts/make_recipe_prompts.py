@@ -12,5 +12,5 @@ Please respond ONLY with a valid JSON object in the following format:
 "total_calories": total_value
 }}
 Use approximate values based on common nutritional databases. Be conservative with estimates. If quantities are not specified, use standard serving sizes.
-Return ONLY the JSON object, no additional text
+Return a valid JSON object only, no additional text.
 """
