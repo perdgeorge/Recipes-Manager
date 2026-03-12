@@ -1,5 +1,5 @@
 [project]
-name = "sintagies"
+name = "Recipes App"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -7,18 +7,22 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.16.5",
     "argon2-cffi>=25.1.0",
+    "distro>=1.9.0",
     "faker>=37.8.0",
     "fastapi[standard]>=0.118.0",
     "httpx>=0.28.1",
     "ipython>=9.6.0",
+    "jiter>=0.13.0",
     "loguru>=0.7.3",
+    "openai>=2.26.0",
     "passlib[argon2]>=1.7.4",
     "psycopg2-binary>=2.9.10",
     "pydantic-settings>=2.11.0",
+    "pyjwt>=2.10.1",
     "pytest>=8.4.2",
     "ruff>=0.13.3",
     "sqlalchemy>=2.0.43",
     "testcontainers[postgresql]>=4.13.1",
+    "tqdm>=4.67.3",
     "uvicorn>=0.37.0",
-    "pyjwt>=2.10.1",
 ]
