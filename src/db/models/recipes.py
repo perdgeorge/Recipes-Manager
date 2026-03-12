@@ -64,6 +64,18 @@ class Recipe(Base, TimestampMixin):
     def is_vegan(self) -> bool:
         return all(ingredient.is_vegan for ingredient in self.ingredients)
 
+    @property
+    def recipe_ingredients_factory(self) -> list[dict]:
+        return [
+            {
+                "ingredient_id": assoc.ingredient_id,
+                "name": assoc.ingredient.name,
+                "is_vegan": assoc.ingredient.is_vegan,
+                "quantity": assoc.quantity,
+            }
+            for assoc in self.recipe_ingredients
+        ]
+
 
 class RecipeIngredient(Base):
     __tablename__ = "recipe_ingredients"

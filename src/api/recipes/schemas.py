@@ -4,8 +4,10 @@ from src.api.recipes.enums import DifficultyLevel
 from src.api.schemas import BaseSchema
 
 
-class RecipeIngredientPayload(BaseSchema):
+class RecipeIngredientFactory(BaseSchema):
     ingredient_id: int = Field(..., examples=[1])
+    name: str = Field(..., examples=["Broccoli"])
+    is_vegan: bool = Field(..., examples=[True])
     quantity: str = Field(..., examples=["100 grams"])
 
 
@@ -27,9 +29,18 @@ class RecipeBaseSchema(BaseSchema):
 
 
 class CreateRecipeSchema(RecipeBaseSchema):
-    ingredients: list[RecipeIngredientPayload] = Field(
+    ingredients: list[RecipeIngredientFactory] = Field(
         default_factory=list,
-        examples=[[{"ingredient_id": 1, "quantity": "100 grams"}]],
+        examples=[
+            [
+                {
+                    "ingredient_id": 1,
+                    "name": "Broccoli",
+                    "is_vegan": True,
+                    "quantity": "100 grams",
+                }
+            ]
+        ],
     )
 
 
@@ -37,19 +48,52 @@ class GetRecipeSchema(RecipeBaseSchema):
     is_vegan: bool = Field(..., examples=[False])
     id: int = Field(..., examples=[1])
     created_at: datetime = Field(..., examples=["2023-10-01T12:00:00Z"])
-    ingredients: list[RecipeIngredientPayload] = Field(
+    ingredients: list[RecipeIngredientFactory] = Field(
         default_factory=list,
-        alias="recipe_ingredients_payload",
+        alias="recipe_ingredients_factory",
         serialization_alias="ingredients",
     )
     user_id: int = Field(..., examples=[1])
 
 
 class UpdateRecipeSchema(RecipeBaseSchema):
-    ingredients: list[RecipeIngredientPayload] = Field(
-        default_factory=list, examples=[[{"ingredient_id": 1, "quantity": "100 grams"}]]
+    ingredients: list[RecipeIngredientFactory] = Field(
+        default_factory=list,
+        examples=[
+            [
+                {
+                    "ingredient_id": 1,
+                    "name": "Broccoli",
+                    "is_vegan": True,
+                    "quantity": "100 grams",
+                }
+            ]
+        ],
     )
 
 
 class DeleteRecipeSchema(GetRecipeSchema):
     pass
+
+
+class GetIngredientRecipeSchema(BaseSchema):
+    name: str = Field(max_length=183, examples=["Tzatziki"])
+    cooking_time: int = Field(..., examples=[30], ge=1)
+    portions: int = Field(..., examples=[4], ge=1)
+    instructions: str = Field(..., examples=["Mix all ingredients."])
+    is_vegan: bool = Field(..., examples=[False])
+    ingredients: list[RecipeIngredientFactory] = Field(
+        default_factory=list,
+        alias="ingredients_factory",
+        serialization_alias="ingredients",
+        examples=[
+            [
+                {
+                    "ingredient_id": 1,
+                    "name": "Broccoli",
+                    "is_vegan": True,
+                    "quantity": "100 grams",
+                }
+            ]
+        ],
+    )

@@ -5,10 +5,11 @@ from src.db.models.recipes import Recipe, RecipeIngredient
 from src.db.models.ingredients import Ingredient
 from src.db.models.users import User
 from src.api.recipes.schemas import (
+    GetIngredientRecipeSchema,
     GetRecipeSchema,
     CreateRecipeSchema,
     DeleteRecipeSchema,
-    RecipeIngredientPayload,
+    RecipeIngredientFactory,
     UpdateRecipeSchema,
 )
 from src.core.exceptions import ErrorException
@@ -57,7 +58,7 @@ class RecipeRepository:
         return GetRecipeSchema.model_validate(recipe)
 
     def make_recipe_ingredients(
-        self, items: list[RecipeIngredientPayload]
+        self, items: list[RecipeIngredientFactory]
     ) -> list[RecipeIngredient]:
         if not items:
             return []
@@ -186,3 +187,18 @@ class RecipeRepository:
                 kind=ErrorKind.CONFLICT,
                 source=f"{self.repo_name},update_recipe",
             )
+
+    def get_recipes_with_ingredients_by_id(
+        self, recipe_ingredient_id: int
+    ) -> list[GetIngredientRecipeSchema]:
+        recipes = (
+            self.db.query(Recipe)
+            .join(RecipeIngredient)
+            .filter(RecipeIngredient.ingredient_id == recipe_ingredient_id)
+            .all()
+        )
+        return [GetIngredientRecipeSchema.model_validate(recipe) for recipe in recipes]
+
+    def get_calories_by_recipe_id(self, recipe_id: int) -> int:
+        recipe = self.get_recipe_by_id(recipe_id)
+        return recipe
